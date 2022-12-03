@@ -146,6 +146,22 @@ class build_unet(nn.Module):
 
         return y
 
+    def to(self, device):
+        # Encoder Blocks
+        for encoder_block in self.encoder_blocks:
+            encoder_block.to(device)
+
+        # Bottleneck
+        self.bottleneck.to(device)
+
+        # Decoder Blocks
+        for decoder_block in self.decoder_blocks:
+            decoder_block.to(device)
+
+        # Classifier
+        self.classifier.to(device)
+
+
 
 if __name__ == "__main__":
     inputs = torch.randn((2, 3, 512, 512))
