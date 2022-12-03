@@ -1,2 +1,6 @@
-data/
 tetris/
+data/
+new_data/
+checkpoints/
+results/
+src/__pycache__
