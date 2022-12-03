@@ -41,6 +41,3 @@ Defines the unet class. Highly modifiable: layers, input channels, feature chann
 **TODO: Rest of the files**
 
 The `data` directory contains the data, images and masks are separated into `images` and `masks` directories respectively. `paths_df_validated_0_to_6500_8000_to_8499.csv` contains the path to the filtered images and corresponding masks.
-
-The `new_data` directory will contain the augmented data and stuff. Run the `data_augmentation.py` to generate these directories, and populate them. You can set the how many images it loads.
-
