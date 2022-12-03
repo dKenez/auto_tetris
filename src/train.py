@@ -72,8 +72,8 @@ if __name__ == "__main__":  # Seeding
     H = 512
     W = 512
     size = (H, W)
-    batch_size = 2
-    num_epochs = 10
+    batch_size = 30
+    num_epochs = 20
     lr = 1e-4
     checkpoint_path = base_path / "checkpoints/checkpoint.pth"
 
