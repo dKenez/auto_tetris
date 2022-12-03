@@ -53,7 +53,7 @@ if __name__ == "__main__":  # Seeding
 
     # Directories
     base_path = Path(__file__).parent.parent
-    create_dir(base_path / "files")
+    create_dir(base_path / "checkpoints")
 
     # Load dataset
     train_x = list((base_path / "new_data/train/images/").glob("*.jpeg"))
@@ -87,12 +87,7 @@ if __name__ == "__main__":  # Seeding
     
     val_loader = DataLoader(
         dataset=val_dataset, batch_size=batch_size, shuffle=False, num_workers=2
-    )
-
-    test_loader = DataLoader(
-        dataset=test_dataset, batch_size=batch_size, shuffle=False, num_workers=2
-    )
-    
+    )    
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = build_unet()

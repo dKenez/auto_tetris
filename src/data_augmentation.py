@@ -105,7 +105,7 @@ if __name__ == "__main__":
     base_path = Path(__file__).parent.parent
 
     (train_x, train_y), (val_x, val_y), (test_x, test_y) = load_data(
-        base_path, max_items=20
+        base_path
     )
     print(f"{len(train_x)=} = {len(train_y)=}")
     print(f"{len(val_x)=} = {len(val_y)=}")
