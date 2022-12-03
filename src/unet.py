@@ -178,21 +178,21 @@ class build_unet(nn.Module):
 
         return y
 
-    def to(self, device):
-        # Encoder Blocks
+    # def to(self, device):
+        # # Encoder Blocks
         
-        self.encoder_blocks = [encoder_block.to(device) for encoder_block in self.encoder_blocks]
+        # self.encoder_blocks = [encoder_block.to(device) for encoder_block in self.encoder_blocks]
             
-        # Bottleneck
-        self.bottleneck = self.bottleneck.to(device)
+        # # Bottleneck
+        # self.bottleneck = self.bottleneck.to(device)
 
-        # Decoder Blocks
-        self.decoder_blocks = [decoder_block.to(device) for decoder_block in self.decoder_blocks]
+        # # Decoder Blocks
+        # self.decoder_blocks = [decoder_block.to(device) for decoder_block in self.decoder_blocks]
             
-        # Classifier
-        self.classifier = self.classifier.to(device)
+        # # Classifier
+        # self.classifier = self.classifier.to(device)
         
-        return self
+        # return self
 
 
 
