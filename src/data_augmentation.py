@@ -121,7 +121,7 @@ if __name__ == "__main__":
     print(f"{len(val_x)=} = {len(val_y)=}")
     print(f"{len(test_x)=} = {len(test_y)=}")
 
-    create_new_data_dirs()
+    create_new_data_dirs(base_path)
 
     # data augmentation
     augment_data(
