@@ -13,6 +13,7 @@
 import toml
 from pathlib import Path
 from loss import DiceBCELoss, DiceLoss, IoULoss
+from torch.nn import BCELoss
 
 class Hyperparams:
     def __init__(self, path: Path):
@@ -34,7 +35,7 @@ class Hyperparams:
         return f"roof_surface_model_B{self.batch_size}_E{self.epochs}_lr{formatted_lr}_L{self.layers}_{self.optimizer}_{self.loss}.pth"
 
     # using property decorator
-    # a getter function
+    # a loss getter function
     @property
     def loss_fn(self):
         if self.loss == "DiceBCE":
@@ -43,17 +44,19 @@ class Hyperparams:
             return DiceLoss()
         if self.loss == "IoU":
             return IoULoss()
+        if self.loss == "BCE":
+            return BCELoss()
 
     # # using property decorator
-    # # a getter function
-    # @property
-    # def loss_fn(self):
-    #     if self.loss == "DiceBCE":
-    #         return DiceBCELoss()
-    #     if self.loss == "Dice":
-    #         return DiceLoss()
-    #     if self.loss == "IoU":
-    # return Adam
+    # # a optimizer getter function
+    @property
+    def loss_fn(self):
+        if self.optimizer == "SGD":
+            return SGD
+        if self.optimizer == "RMS":
+            return RMSprop
+        if self.optimizer == "Adam":
+            return Adam
 
 
 if __name__ == "__main__":
