@@ -1,4 +1,0 @@
-Dataset size:
-Train: 1861 - Valid: 408 - Test: 406
-cuda
-0

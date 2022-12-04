@@ -18,7 +18,7 @@ def load_data(path: Path, split=(70, 15, 15), shuffle=True, max_items=-1):
         raise ValueError("split parameter must sum to 100")
 
     validated_images_csv = "paths_df_validated_0_to_6500_8000_to_8499.csv"
-    df = pd.read_csv(base_path / "data" / validated_images_csv)
+    df = pd.read_csv(path / "data" / validated_images_csv)
 
     calc_true = df.apply(lambda x: x["valid"], axis=1)
 
@@ -100,6 +100,15 @@ def augment_data(images, masks, src_path, save_path, augment=True, size=(128, 12
             cv2.imwrite(image_path, i)
             cv2.imwrite(mask_path, m)
 
+def create_new_data_dirs(base_path: Path):
+    # directories for augmented data
+    create_dir(base_path / "new_data/train/images/")
+    create_dir(base_path / "new_data/train/masks/")
+    create_dir(base_path / "new_data/val/images/")
+    create_dir(base_path / "new_data/val/masks/")
+    create_dir(base_path / "new_data/test/images/")
+    create_dir(base_path / "new_data/test/masks/")
+
 
 if __name__ == "__main__":
     base_path = Path(__file__).parent.parent
@@ -112,13 +121,7 @@ if __name__ == "__main__":
     print(f"{len(val_x)=} = {len(val_y)=}")
     print(f"{len(test_x)=} = {len(test_y)=}")
 
-    # directories for augmented data
-    create_dir(base_path / "new_data/train/images/")
-    create_dir(base_path / "new_data/train/masks/")
-    create_dir(base_path / "new_data/val/images/")
-    create_dir(base_path / "new_data/val/masks/")
-    create_dir(base_path / "new_data/test/images/")
-    create_dir(base_path / "new_data/test/masks/")
+    create_new_data_dirs()
 
     # data augmentation
     augment_data(

@@ -103,13 +103,15 @@ if __name__ == "__main__":  # Seeding
 
     """ Training the model """
     best_val_loss = float("inf")
-    torch.cuda.empty_cache()
     for epoch in range(num_epochs):
         start_time = time.time()
 
         train_loss = train(model, train_loader, optimizer, loss_fn, device)
         val_loss = evaluate(model, val_loader, loss_fn, device)
 
+        end_time = time.time()
+        epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+        
         """ Saving the model """
         if val_loss < best_val_loss:
             data_str = f"Valid loss improved from {best_val_loss:2.4f} to {val_loss:2.4f}. Saving checkpoint: {checkpoint_path}"
@@ -117,9 +119,6 @@ if __name__ == "__main__":  # Seeding
 
             best_val_loss = val_loss
             torch.save(model.state_dict(), checkpoint_path)
-
-        end_time = time.time()
-        epoch_mins, epoch_secs = epoch_time(start_time, end_time)
 
         data_str = f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s\n'
         data_str += f'\tTrain Loss: {train_loss:.3f}\n'
