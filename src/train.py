@@ -1,4 +1,5 @@
 import os
+os.environ['CUDA_VISIBLE_DEVICES']='2'
 from pathlib import Path
 import time
 from glob import glob
@@ -9,7 +10,7 @@ import torch.nn as nn
 
 from unet import build_unet
 from loss import DiceLoss, DiceBCELoss
-from utils import seeding, create_dir, epoch_time
+from utils import seeding, create_dir, epoch_time, sort_path_list
 from data import DriveDataset
 
 def train(model, loader, optimizer, loss_fn, device):
@@ -58,22 +59,25 @@ if __name__ == "__main__":  # Seeding
     # Load dataset
     train_x = list((base_path / "new_data/train/images/").glob("*.jpeg"))
     train_y = list((base_path / "new_data/train/masks/").glob("*.jpeg"))
+    
+    train_x.sort(key=sort_path_list)
+    train_y.sort(key=sort_path_list)
 
     val_x = list((base_path / "new_data/val/images/").glob("*.jpeg"))
     val_y = list((base_path / "new_data/val/masks/").glob("*.jpeg"))
+    
+    val_x.sort(key=sort_path_list)
+    val_y.sort(key=sort_path_list)
 
-    test_x = list((base_path / "new_data/test/images/").glob("*.jpeg"))
-    test_y = list((base_path / "new_data/test/masks/").glob("*.jpeg"))
-
-    data_str = f"Dataset size:\nTrain: {len(train_x)} - Valid: {len(val_x)} - Test: {len(test_x)}"
+    data_str = f"Dataset size:\nTrain: {len(train_x)} - Valid: {len(val_x)}"
     print(data_str)
 
     # Hyperparameters
     H = 512
     W = 512
     size = (H, W)
-    batch_size = 30
-    num_epochs = 20
+    batch_size = 40
+    num_epochs = 40
     lr = 1e-4
     checkpoint_path = base_path / "checkpoints/checkpoint.pth"
 
@@ -99,7 +103,7 @@ if __name__ == "__main__":  # Seeding
 
     """ Training the model """
     best_val_loss = float("inf")
-
+    torch.cuda.empty_cache()
     for epoch in range(num_epochs):
         start_time = time.time()
 

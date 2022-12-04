@@ -137,7 +137,7 @@ class build_unet(nn.Module):
 
         self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
 
-        self.softmax = nn.Softmax()
+        #self.sigmoid = nn.Sigmoid()
 
     def forward(self, inputs):
         # x = inputs
@@ -174,7 +174,7 @@ class build_unet(nn.Module):
         d4 = self.d4(d3, s1)
 
         y = self.outputs(d4)
-        y = self.softmax(y)
+        #y = self.sigmoid(y)
 
         return y
 

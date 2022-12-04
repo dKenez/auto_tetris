@@ -10,7 +10,7 @@ import torch
 from sklearn.metrics import accuracy_score, f1_score, jaccard_score, precision_score, recall_score
 
 from unet import build_unet
-from utils import create_dir, seeding
+from utils import create_dir, seeding, sort_path_list
 
 def calculate_metrics(y_true, y_pred):
     # Ground truth
@@ -49,10 +49,13 @@ if __name__ == "__main__":
     # Load dataset
     test_x = list((base_path / "new_data/test/images/").glob("*.jpeg"))
     test_y = list((base_path / "new_data/test/masks/").glob("*.jpeg"))
+    
+    test_x.sort(key=sort_path_list)
+    test_y.sort(key=sort_path_list)
 
     # Hyperparameters
-    H = 512
-    W = 512
+    H = 128
+    W = 128
     size = (W, H)
     checkpoint_path = base_path / "checkpoints/checkpoint.pth"
 

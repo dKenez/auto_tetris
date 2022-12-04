@@ -52,7 +52,7 @@ def load_data(path: Path, split=(70, 15, 15), shuffle=True, max_items=-1):
     return (train_x, train_y), (val_x, val_y), (test_x, test_y)
 
 
-def augment_data(images, masks, src_path, save_path, augment=True, size=(512, 512)):
+def augment_data(images, masks, src_path, save_path, augment=True, size=(128, 128)):
 
     src_path_str = str(src_path)
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     (train_x, train_y), (val_x, val_y), (test_x, test_y) = load_data(
         base_path,
-        max_items=500
+        #max_items=200
     )
     print(f"{len(train_x)=} = {len(train_y)=}")
     print(f"{len(val_x)=} = {len(val_y)=}")
