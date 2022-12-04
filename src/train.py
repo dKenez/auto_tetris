@@ -12,8 +12,8 @@ from unet import build_unet
 from loss import DiceLoss, DiceBCELoss
 from utils import seeding, create_dir, epoch_time, sort_path_list
 from data import DriveDataset
-#from tqdm.notebook import tqdm, trange
-from tqdm import tqdm, trange
+# from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 def train(model, loader, optimizer, loss_fn, device):
     epoch_loss = 0.0

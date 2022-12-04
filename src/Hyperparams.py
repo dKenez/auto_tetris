@@ -14,6 +14,7 @@ import toml
 from pathlib import Path
 from loss import DiceBCELoss, DiceLoss, IoULoss
 from torch.nn import BCELoss
+from torch.optim import Adam, RMSprop, SGD
 
 class Hyperparams:
     def __init__(self, path: Path):
@@ -50,7 +51,7 @@ class Hyperparams:
     # # using property decorator
     # # a optimizer getter function
     @property
-    def loss_fn(self):
+    def optimizer_class(self):
         if self.optimizer == "SGD":
             return SGD
         if self.optimizer == "RMS":

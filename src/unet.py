@@ -134,10 +134,7 @@ class build_unet(nn.Module):
         self.classifier = nn.Conv2d(
             feature_channels, output_channels, kernel_size=1, padding=0
         )
-
-        print(len(self.encoder_blocks))
-        print(len(self.decoder_blocks))
-
+        
         # self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
 
     def forward(self, inputs):
