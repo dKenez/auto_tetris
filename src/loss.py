@@ -62,3 +62,21 @@ class IoULoss(nn.Module):
         IoU = (intersection + smooth)/(union + smooth)
                 
         return 1 - IoU
+    
+class BCElossFuntion(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(BCElossFuntion, self).__init__()
+
+    def forward(self, inputs, targets, smooth=1):
+        
+        #comment out if your model contains a sigmoid or equivalent activation layer
+        inputs = torch.sigmoid(inputs)
+
+        #flatten label and prediction tensors
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
+        
+        BCE = F.binary_cross_entropy(inputs, targets, reduction='mean')
+        
+
+        return BCE

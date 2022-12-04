@@ -12,7 +12,7 @@
 
 import toml
 from pathlib import Path
-from loss import DiceBCELoss, DiceLoss, IoULoss
+from loss import DiceBCELoss, DiceLoss, IoULoss, BCElossFuntion
 from torch.nn import BCELoss
 from torch.optim import Adam, RMSprop, SGD
 
@@ -46,7 +46,7 @@ class Hyperparams:
         if self.loss == "IoU":
             return IoULoss()
         if self.loss == "BCE":
-            return BCELoss()
+            return BCElossFuntion()
 
     # # using property decorator
     # # a optimizer getter function
