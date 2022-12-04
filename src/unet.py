@@ -64,32 +64,32 @@ class decoder_block(nn.Module):
 
 
 class build_unet(nn.Module):
-    # @staticmethod
-    # def generate_encoder_blocks(layers: int, input_channels: int, feature_channels: int):
-    #     yield encoder_block(input_channels, feature_channels)
-    #     for i in range(1, layers):
-    #         yield encoder_block(
-    #             feature_channels * 2 ** (i - 1), feature_channels * 2**i
-    #         )
+    @staticmethod
+    def generate_encoder_blocks(layers: int, input_channels: int, feature_channels: int):
+        yield encoder_block(input_channels, feature_channels)
+        for i in range(1, layers):
+            yield encoder_block(
+                feature_channels * 2 ** (i - 1), feature_channels * 2**i
+            )
 
-    # @staticmethod
-    # def generate_decoder_blocks(layers: int, feature_channels: int):
-    #     for i in range(layers, 0, -1):
-    #         yield decoder_block(
-    #             feature_channels * 2**i, feature_channels * 2 ** (i - 1)
-    #         )
+    @staticmethod
+    def generate_decoder_blocks(layers: int, feature_channels: int):
+        for i in range(layers, 0, -1):
+            yield decoder_block(
+                feature_channels * 2**i, feature_channels * 2 ** (i - 1)
+            )
 
     def __init__(
         self,
-        # layers: int = 4,
+        layers: int = 4,
         input_channels: int = 3,
         feature_channels: int = 64,
         output_channels: int = 1,
     ):
-        # if not isinstance(layers, int):
-        #     raise TypeError("layers parameter has to be of type int")
-        # if layers < 1:
-        #     raise ValueError("layers parameter has to be at least 1")
+        if not isinstance(layers, int):
+            raise TypeError("layers parameter has to be of type int")
+        if layers < 1:
+            raise ValueError("layers parameter has to be at least 1")
         if not isinstance(input_channels, int):
             raise TypeError("input_channels parameter has to be of type int")
         if input_channels < 1:
@@ -106,93 +106,94 @@ class build_unet(nn.Module):
         super().__init__()
 
         # Encoder Blocks
-        # self.encoder_blocks = list(
-        #     self.generate_encoder_blocks(layers, input_channels, feature_channels)
-        # )
+        self.encoder_blocks = list(
+            self.generate_encoder_blocks(layers, input_channels, feature_channels)
+        )
 
-        self.e1 = encoder_block(3, 64)
-        self.e2 = encoder_block(64, 128)
-        self.e3 = encoder_block(128, 256)
-        self.e4 = encoder_block(256, 512)
+        # self.e1 = encoder_block(3, 64)
+        # self.e2 = encoder_block(64, 128)
+        # self.e3 = encoder_block(128, 256)
+        # self.e4 = encoder_block(256, 512)
 
         # Bottleneck
-        # self.bottleneck = convolution_block(
-        #     feature_channels * 2**(layers-1), feature_channels * 2 ** layers
-        # )
-        self.b = convolution_block(512, 1024)
+        self.bottleneck = convolution_block(
+            feature_channels * 2**(layers-1), feature_channels * 2 ** layers
+        )
+        # self.b = convolution_block(512, 1024)
 
         # Decoder Blocks
-        # self.decoder_blocks = list(
-        #     self.generate_decoder_blocks(layers, feature_channels)
-        # )
-        self.d1 = decoder_block(1024, 512)
-        self.d2 = decoder_block(512, 256)
-        self.d3 = decoder_block(256, 128)
-        self.d4 = decoder_block(128, 64)
+        self.decoder_blocks = list(
+            self.generate_decoder_blocks(layers, feature_channels)
+        )
+        # self.d1 = decoder_block(1024, 512)
+        # self.d2 = decoder_block(512, 256)
+        # self.d3 = decoder_block(256, 128)
+        # self.d4 = decoder_block(128, 64)
 
         # Classifier
-        # self.classifier = nn.Conv2d(
-        #     feature_channels, output_channels, kernel_size=1, padding=0
-        # )
+        self.classifier = nn.Conv2d(
+            feature_channels, output_channels, kernel_size=1, padding=0
+        )
 
-        self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
+        print(len(self.encoder_blocks))
+        print(len(self.decoder_blocks))
 
-        #self.sigmoid = nn.Sigmoid()
+        # self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
 
     def forward(self, inputs):
-        # x = inputs
-        # skips = []
+        x = inputs
+        skips = []
 
-        # # Encoder
-        # for encoder_block in self.encoder_blocks:
-        #     skip, x = encoder_block(x)
-        #     skips.append(skip)
+        # Encoder
+        for encoder_block in self.encoder_blocks:
+            skip, x = encoder_block(x)
+            skips.append(skip)
 
-        # # Bottleneck
-        # x = self.bottleneck(x)
+        # Bottleneck
+        x = self.bottleneck(x)
 
-        # # Decoder
-        # for decoder_block, skip in zip(self.decoder_blocks, reversed(skips)):
-        #     x = decoder_block(x, skip)
+        # Decoder
+        for decoder_block, skip in zip(self.decoder_blocks, reversed(skips)):
+            x = decoder_block(x, skip)
 
-        # # Classification
-        # y = self.classifier(x)
+        # Classification
+        y = self.classifier(x)
 
-        """ Encoder """
-        s1, p1 = self.e1(inputs)
-        s2, p2 = self.e2(p1)
-        s3, p3 = self.e3(p2)
-        s4, p4 = self.e4(p3)
+        # """ Encoder """
+        # s1, p1 = self.e1(inputs)
+        # s2, p2 = self.e2(p1)
+        # s3, p3 = self.e3(p2)
+        # s4, p4 = self.e4(p3)
 
-        """ Bottleneck """
-        b = self.b(p4)
+        # """ Bottleneck """
+        # b = self.b(p4)
 
-        """ Decoder """
-        d1 = self.d1(b, s4)
-        d2 = self.d2(d1, s3)
-        d3 = self.d3(d2, s2)
-        d4 = self.d4(d3, s1)
+        # """ Decoder """
+        # d1 = self.d1(b, s4)
+        # d2 = self.d2(d1, s3)
+        # d3 = self.d3(d2, s2)
+        # d4 = self.d4(d3, s1)
 
-        y = self.outputs(d4)
-        #y = self.sigmoid(y)
+        # y = self.outputs(d4)
+        # #y = self.sigmoid(y)
 
         return y
 
-    # def to(self, device):
-        # # Encoder Blocks
+    def to(self, device):
+        # Encoder Blocks
         
-        # self.encoder_blocks = [encoder_block.to(device) for encoder_block in self.encoder_blocks]
+        self.encoder_blocks = [encoder_block.to(device) for encoder_block in self.encoder_blocks]
             
-        # # Bottleneck
-        # self.bottleneck = self.bottleneck.to(device)
+        # Bottleneck
+        self.bottleneck = self.bottleneck.to(device)
 
-        # # Decoder Blocks
-        # self.decoder_blocks = [decoder_block.to(device) for decoder_block in self.decoder_blocks]
+        # Decoder Blocks
+        self.decoder_blocks = [decoder_block.to(device) for decoder_block in self.decoder_blocks]
             
-        # # Classifier
-        # self.classifier = self.classifier.to(device)
+        # Classifier
+        self.classifier = self.classifier.to(device)
         
-        # return self
+        return self
 
 
 

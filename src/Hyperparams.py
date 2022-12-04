@@ -30,7 +30,8 @@ class Hyperparams:
         self.image_size = toml_dict['image_size']
 
     def model_name(self):
-        return f"roof_surface_model_B{self.batch_size}_E{self.epochs}_lr{self.layers}_L{self.layers}_{self.optimizer}_{self.loss}.pth"
+        formatted_lr = "{:.3e}".format(self.lr)
+        return f"roof_surface_model_B{self.batch_size}_E{self.epochs}_lr{formatted_lr}_L{self.layers}_{self.optimizer}_{self.loss}.pth"
 
     # using property decorator
     # a getter function
