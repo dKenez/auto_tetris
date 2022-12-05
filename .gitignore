@@ -4,3 +4,4 @@ new_data/
 checkpoints/
 results/
 src/__pycache__
+models/

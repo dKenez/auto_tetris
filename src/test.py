@@ -12,16 +12,18 @@ from sklearn.metrics import accuracy_score, f1_score, jaccard_score, precision_s
 from unet import build_unet
 from utils import create_dir, seeding, sort_path_list
 
-def calculate_metrics(y_true, y_pred):
+
+
+def calculate_metrics(y_true, y_pred,threshold):
     # Ground truth
     y_true = y_true.cpu().numpy()
-    y_true = y_true > 0.5
+    y_true = y_true > threshold
     y_true = y_true.astype(np.uint8)
     y_true = y_true.reshape(-1)
 
     # Prediction
     y_pred = y_pred.cpu().numpy()
-    y_pred = y_pred > 0.5
+    y_pred = y_pred > threshold
     y_pred = y_pred.astype(np.uint8)
     y_pred = y_pred.reshape(-1)
 
@@ -39,6 +41,8 @@ def mask_parse(mask):
     return mask
 
 if __name__ == "__main__":
+    
+    threshold=0.75
     # Seeding
     seeding(42)
 
@@ -57,7 +61,7 @@ if __name__ == "__main__":
     H = 128
     W = 128
     size = (W, H)
-    checkpoint_path = base_path / "checkpoints/checkpoint.pth"
+    checkpoint_path = base_path / "models/roof_surface_model_B40_E100_lr1.000e-02_L4_SGD_Dice.pth"
 
     # Load checkpoint
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -104,11 +108,11 @@ if __name__ == "__main__":
             time_taken.append(total_time)
 
 
-            score = calculate_metrics(y, pred_y)
+            score = calculate_metrics(y, pred_y, threshold)
             metrics_score = list(map(add, metrics_score, score))
             pred_y = pred_y[0].cpu().numpy()        ## (1, 512, 512)
             pred_y = np.squeeze(pred_y, axis=0)     ## (512, 512)
-            pred_y = pred_y > 0.5
+            pred_y = pred_y > threshold
             pred_y = np.array(pred_y, dtype=np.uint8)
 
 

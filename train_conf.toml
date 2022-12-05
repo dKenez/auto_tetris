@@ -1,9 +1,9 @@
 # TUNE
 batch_size = 40 # 20 | 40 | 60
-lr = 1e-3 # 1e-4 | 1e-3 | 1e-2
+lr = 1e-2 # 1e-4 | 1e-3 | 1e-2
 layers = 4 # 3 | 4 | 5
-optimizer = "Adam" # Adam | RMSprop | SGD
-loss = "BCE" # DiceBCE | Dice | BCE | IoU?
+optimizer = "SGD" # Adam | RMSprop | SGD
+loss = "Dice" # DiceBCE | Dice | BCE | IoU?
 
 # DON'T TUNE
 image_size = 128
