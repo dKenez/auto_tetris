@@ -42,7 +42,7 @@ def mask_parse(mask):
 
 if __name__ == "__main__":
     
-    threshold=0.75
+    threshold=0.8
     # Seeding
     seeding(42)
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     H = 128
     W = 128
     size = (W, H)
-    checkpoint_path = base_path / "models/roof_surface_model_B40_E100_lr1.000e-02_L4_SGD_Dice.pth"
+    checkpoint_path = base_path / "models/roof_surface_model_B40_E10_lr1.000e-03_L4_Adam_DiceBCE.pth"
 
     # Load checkpoint
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -111,19 +111,22 @@ if __name__ == "__main__":
             score = calculate_metrics(y, pred_y, threshold)
             metrics_score = list(map(add, metrics_score, score))
             pred_y = pred_y[0].cpu().numpy()        ## (1, 512, 512)
-            pred_y = np.squeeze(pred_y, axis=0)     ## (512, 512)
+            pred_y = np.squeeze(pred_y, axis=0)
             pred_y = pred_y > threshold
             pred_y = np.array(pred_y, dtype=np.uint8)
+
 
 
         """ Saving masks """
         ori_mask = mask_parse(mask)
         pred_y = mask_parse(pred_y)
         line = np.ones((size[1], 10, 3)) * 128
-
+        
+        
         cat_images = np.concatenate(
-            [image, line, ori_mask, line, pred_y * 255], axis=1
+            [hm, line, ori_mask, line, pred_y * 255], axis=1
         )
+        
         cv2.imwrite(f"results/{x_filename}.png", cat_images)
 
     jaccard = metrics_score[0]/len(test_x)
