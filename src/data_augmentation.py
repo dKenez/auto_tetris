@@ -71,12 +71,12 @@ def augment_data(images, masks, src_path, save_path, augment=True, size=(128, 12
             x_1 = augmented["image"]
             y_1 = augmented["mask"]
 
-            aug = VerticalFlip(p=1.0)
+            aug = VerticalFlip(p=0)
             augmented = aug(image=x_image, mask=y_image)
             x_2 = augmented["image"]
             y_2 = augmented["mask"]
 
-            aug = Rotate(limit=45, p=1.0)
+            aug = Rotate(limit=45, p=0)
             augmented = aug(image=x_image, mask=y_image)
             x_3 = augmented["image"]
             y_3 = augmented["mask"]

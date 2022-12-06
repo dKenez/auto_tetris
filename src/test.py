@@ -8,7 +8,7 @@ from tqdm import tqdm
 import imageio
 import torch
 from sklearn.metrics import accuracy_score, f1_score, jaccard_score, precision_score, recall_score
-
+import glob
 from unet import build_unet
 from utils import create_dir, seeding, sort_path_list
 
@@ -42,14 +42,19 @@ def mask_parse(mask):
 
 if __name__ == "__main__":
     
-    threshold=0.8
+    threshold=0.5
     # Seeding
     seeding(42)
 
     # Directories
     base_path = Path(__file__).parent.parent
     create_dir(base_path / "results")
-
+    
+    dir = (base_path / "results")
+    filelist = glob.glob(os.path.join(dir, "*"))
+    for f in filelist:
+        os.remove(f)
+    
     # Load dataset
     test_x = list((base_path / "new_data/test/images/").glob("*.jpeg"))
     test_y = list((base_path / "new_data/test/masks/").glob("*.jpeg"))
@@ -61,7 +66,7 @@ if __name__ == "__main__":
     H = 128
     W = 128
     size = (W, H)
-    checkpoint_path = base_path / "models/roof_surface_model_B40_E10_lr1.000e-03_L4_Adam_DiceBCE.pth"
+    checkpoint_path = base_path / "models/roof_surface_model_B40_E100_lr1.000e-03_L4_SGD_DiceBCE.pth"
 
     # Load checkpoint
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -104,6 +109,7 @@ if __name__ == "__main__":
             start_time = time.time()
             pred_y = model(x)
             pred_y = torch.sigmoid(pred_y)
+            #pred_y = torch.nn.functional.softmax(pred_y,dim=2)
             total_time = time.time() - start_time
             time_taken.append(total_time)
 
@@ -124,7 +130,7 @@ if __name__ == "__main__":
         
         
         cat_images = np.concatenate(
-            [hm, line, ori_mask, line, pred_y * 255], axis=1
+            [image, line, ori_mask, line, pred_y * 255], axis=1
         )
         
         cv2.imwrite(f"results/{x_filename}.png", cat_images)
